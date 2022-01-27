@@ -2,6 +2,7 @@ const sequelize = require('../../config/sequelize')
 
 const Sequelize = require('sequelize')
 
+const anamnesis = require('./anamnesis/Anamnesis')
 const userPatient = require('./userPatient/UserPatient')
 const userProfessional = require('./userProfessional/UserProfessional')
 
@@ -11,6 +12,7 @@ const userProfessional = require('./userProfessional/UserProfessional')
 // const foodNutrientItem = require('./foodNutrient/FoodNutrientItem')
 // const nutrient = require('./foodNutrient/Nutrient')
 
+const Anamnesis = anamnesis(sequelize, Sequelize.DataTypes)
 const UserPatient = userPatient(sequelize, Sequelize.DataTypes)
 const UserProfessional = userProfessional(sequelize, Sequelize.DataTypes)
 
@@ -24,6 +26,10 @@ const UserProfessional = userProfessional(sequelize, Sequelize.DataTypes)
 
 UserProfessional.hasMany(UserPatient, {
   foreignKey: 'user_professional_id'
+})
+
+UserPatient.hasMany(Anamnesis, {
+  foreignKey: 'user_patient_id'
 })
 
 // CategoryFood.belongsTo(CompositionTable, {
@@ -69,6 +75,7 @@ const db = {
   // User
   UserProfessional,
   UserPatient,
+  Anamnesis,
 
   // Sequelize
   sequelize

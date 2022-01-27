@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const auth = require('./authUserProfessionalController')
+const anamnesisController = require('./AnamnesisController')
 const userPatientController = require('./userPatientController')
 
 // const user = require('./userController')
@@ -15,6 +16,7 @@ router.get('/', (req, res) => {
 })
 
 router.use('/auth-professional', auth)
+router.use('/anamnesis', anamnesisController)
 router.use('/patient', userPatientController)
 // router.use('/user', user)
 // router.use('/composition-table', compositionTable)
