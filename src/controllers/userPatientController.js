@@ -2,7 +2,7 @@ const express = require('express')
 const { v4: uuid } = require('uuid')
 
 const router = express.Router()
-const { UserPatient } = require('../models/index')
+const { UserPatient, Anamnesis } = require('../models/index')
 const userPatientService = require('../services/UserPatient')
 
 const UserPatientService = new userPatientService(UserPatient)
@@ -27,9 +27,9 @@ router.post('/new', async (req, res) => {
       user_professional_id
     }
 
-    const user = await UserPatientService.add(data)
+    const patient = await UserPatientService.add(data)
 
-    return res.json({ user })
+    return res.json({ patient })
   }
   catch (error) {
     console.log(error)
@@ -37,6 +37,23 @@ router.post('/new', async (req, res) => {
   }
 })
 
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    if (!id) {
+      res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
+      return
+    }
+
+    const patient = await UserPatientService.findOne({ id }, [Anamnesis])
+
+    res.status(200).json({ patient })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ error: "Falha ao pesquisar paciente." })
+  }
+})
 router.get('/', async (req, res) => {
   try {
     const { user_professional_id } = req.query
@@ -46,14 +63,61 @@ router.get('/', async (req, res) => {
       return
     }
 
-    const users = await UserPatientService.findAll({ user_professional_id })
+    const patients = await UserPatientService.findAll({ user_professional_id }, [Anamnesis])
 
-    console.log(users)
-
-    res.status(200).json({patients:users})
+    res.status(200).json({ patients: patients })
   } catch (error) {
     console.log(error)
     res.status(400).json({ error: "Falha ao pesquisar pacientes." })
+  }
+})
+
+router.delete('/delete/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    if (!id) {
+      res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
+      return
+    }
+
+    await UserPatientService.destroy({ id })
+
+    res.status(204).send()
+  } catch (error) {
+    res.status(400).json({ error: "Falha ao deletar paciente." })
+  }
+})
+
+router.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const {
+      name,
+      email,
+      birth_data,
+      gender
+    } = req.body
+
+    if (!id || (name === "") || (birth_data === "") || (gender === "")) {
+      res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
+      return
+    }
+
+    const data = {
+      name,
+      email,
+      birth_data,
+      gender
+    }
+
+    console.log(data)
+
+    const patient = await UserPatientService.update({ id }, data)
+
+    res.status(200).json({ patient })
+  } catch (error) {
+    res.status(400).json({ error: "Falha ao atualizar paciente." })
   }
 })
 

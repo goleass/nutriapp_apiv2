@@ -34,7 +34,8 @@ module.exports = {
       user_patient_id: {
         type: Sequelize.UUID,
         allowNull: false,
-        references: { model: 'UserPatient', key: 'id' }
+        onDelete: 'CASCADE',
+        references: { model: 'UserPatient', key: 'id',  }
       },
       createdAt: Sequelize.DATE,
       updatedAt: Sequelize.DATE,

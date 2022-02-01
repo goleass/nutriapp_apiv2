@@ -23,12 +23,19 @@ const UserProfessional = userProfessional(sequelize, Sequelize.DataTypes)
 // const Nutrient = nutrient(sequelize, Sequelize.DataTypes)
 
 // Tables Relationship
-
 UserProfessional.hasMany(UserPatient, {
   foreignKey: 'user_professional_id'
 })
 
+UserPatient.belongsTo(UserProfessional, {
+  foreignKey: 'user_professional_id'
+})
+
 UserPatient.hasMany(Anamnesis, {
+  foreignKey: 'user_patient_id'
+})
+
+Anamnesis.belongsTo(UserPatient, {
   foreignKey: 'user_patient_id'
 })
 

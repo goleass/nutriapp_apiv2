@@ -21,9 +21,9 @@ class UserPatient {
     }
   }
 
-  async findAll(params) {
+  async findAll(params, include = null) {
     try {
-      const users = await this.UserPatientService.findAll({ where: params })
+      const users = await this.UserPatientService.findAll({ where: params, include, order: [['createdAt', 'DESC']] })
       return users
     } catch (error) {
       throw error
