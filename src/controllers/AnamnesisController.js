@@ -2,14 +2,18 @@ const express = require('express')
 const { v4: uuid } = require('uuid')
 
 const router = express.Router()
-const { Anamnesis } = require('../models/index')
+const { Anamnesis, UserPatient } = require('../models/index')
 const anamnesisService = require('../services/Anamnesis')
+const userPatientService = require('../services/UserPatient')
+const authMiddleware = require('../middlewares/auth')
+
+router.use(authMiddleware)
 
 const AnamnesisService = new anamnesisService(Anamnesis)
+const UserPatientService = new userPatientService(UserPatient)
 
 router.post('/new', async (req, res) => {
   try {
-    console.log(req)
 
     const {
       clinical_case,
@@ -23,6 +27,13 @@ router.post('/new', async (req, res) => {
 
     if (!clinical_case || !anamnesis_date || !user_patient_id) {
       res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
+      return
+    }
+
+    const patient = await UserPatientService.findOne({ user_professional_id: req.user_id, id: user_patient_id })
+
+    if (!patient) {
+      res.status(400).json({ error: "Paciente não encontrado." })
       return
     }
 

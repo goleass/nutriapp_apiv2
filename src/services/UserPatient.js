@@ -12,9 +12,9 @@ class UserPatient {
     }
   }
 
-  async findOne(params) {
+  async findOne(params, include = null) {
     try {
-      const user = await this.UserPatientService.findOne({ where: params })
+      const user = await this.UserPatientService.findOne({ where: params, include })
       return user
     } catch (error) {
       throw error
@@ -23,7 +23,7 @@ class UserPatient {
 
   async findAll(params, include = null) {
     try {
-      const users = await this.UserPatientService.findAll({ where: params, include, order: [['createdAt', 'DESC']] })
+      const users = await this.UserPatientService.findAll({ where: params, include, order: [['name', 'ASC']] })
       return users
     } catch (error) {
       throw error

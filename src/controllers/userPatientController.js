@@ -5,6 +5,10 @@ const router = express.Router()
 const { UserPatient, Anamnesis } = require('../models/index')
 const userPatientService = require('../services/UserPatient')
 
+const authMiddleware = require('../middlewares/auth')
+
+router.use(authMiddleware)
+
 const UserPatientService = new userPatientService(UserPatient)
 
 router.post('/new', async (req, res) => {
@@ -54,6 +58,7 @@ router.get('/:id', async (req, res) => {
     res.status(400).json({ error: "Falha ao pesquisar paciente." })
   }
 })
+
 router.get('/', async (req, res) => {
   try {
     const { user_professional_id } = req.query
