@@ -3,6 +3,7 @@ const router = express.Router()
 
 const auth = require('./authUserProfessionalController')
 const anamnesisController = require('./AnamnesisController')
+const energyExpenditureController = require('./EnergyExpenditureController')
 const userPatientController = require('./userPatientController')
 
 // const user = require('./userController')
@@ -17,6 +18,7 @@ router.get('/', (req, res) => {
 
 router.use('/auth-professional', auth)
 router.use('/anamnesis', anamnesisController)
+router.use('/energy-expenditure', energyExpenditureController)
 router.use('/patient', userPatientController)
 // router.use('/user', user)
 // router.use('/composition-table', compositionTable)
