@@ -2,7 +2,12 @@ const express = require('express')
 const { v4: uuid } = require('uuid')
 
 const router = express.Router()
-const { UserPatient, Anamnesis, EnergyExpenditure } = require('../models/index')
+const { 
+  UserPatient, 
+  Anamnesis, 
+  EnergyExpenditure,
+  Anthropometry
+} = require('../models/index')
 const userPatientService = require('../services/UserPatient')
 
 const authMiddleware = require('../middlewares/auth')
@@ -50,7 +55,14 @@ router.get('/:id', async (req, res) => {
       return
     }
 
-    const patient = await UserPatientService.findOne({ id }, [Anamnesis, {model:EnergyExpenditure}])
+    const patient = await UserPatientService.findOne(
+      { id }, 
+      [
+        Anamnesis, 
+        EnergyExpenditure,
+        Anthropometry
+      ]
+    )
 
     res.status(200).json({ patient })
   } catch (error) {

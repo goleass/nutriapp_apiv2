@@ -10,6 +10,6 @@ app.use(cors())
 app.use(express.json())
 app.use('/', controllers)
 
-app.listen(PORT, '127.0.0.1', () => {
+app.listen(PORT, () => {
   console.log(`Listen on port ${PORT}`)
 })

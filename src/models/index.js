@@ -4,6 +4,7 @@ const Sequelize = require('sequelize')
 
 const anamnesis = require('./anamnesis/Anamnesis')
 const energyExpenditure = require('./energyExpenditure/EnergyExpenditure')
+const anthropometry = require('./anthropometry/Anthropometry')
 const userPatient = require('./userPatient/UserPatient')
 const userProfessional = require('./userProfessional/UserProfessional')
 
@@ -15,6 +16,7 @@ const userProfessional = require('./userProfessional/UserProfessional')
 
 const Anamnesis = anamnesis(sequelize, Sequelize.DataTypes)
 const EnergyExpenditure = energyExpenditure(sequelize, Sequelize.DataTypes)
+const Anthropometry = anthropometry(sequelize, Sequelize.DataTypes)
 const UserPatient = userPatient(sequelize, Sequelize.DataTypes)
 const UserProfessional = userProfessional(sequelize, Sequelize.DataTypes)
 
@@ -46,6 +48,14 @@ UserPatient.hasMany(EnergyExpenditure, {
 })
 
 EnergyExpenditure.belongsTo(UserPatient, {
+  foreignKey: 'user_patient_id'
+})
+
+UserPatient.hasMany(Anthropometry, {
+  foreignKey: 'user_patient_id'
+})
+
+Anthropometry.belongsTo(UserPatient, {
   foreignKey: 'user_patient_id'
 })
 
@@ -94,6 +104,7 @@ const db = {
   UserPatient,
   Anamnesis,
   EnergyExpenditure,
+  Anthropometry,
 
   // Sequelize
   sequelize
