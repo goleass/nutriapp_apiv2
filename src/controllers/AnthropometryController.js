@@ -67,6 +67,47 @@ router.post('/new', async (req, res) => {
   }
 })
 
+router.put('/update/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const {
+      description,
+      anthropometry_date,
+      tall,
+      weight,
+      circumferences,
+      bone_diameters,
+      body_composition,
+      user_patient_id
+    } = req.body
+
+    console.log(description, anthropometry_date, tall, weight)
+
+    if (!id || !description || !anthropometry_date || !tall || !weight) {
+      res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
+      return
+    }
+
+    const data = {
+      description,
+      anthropometry_date,
+      tall,
+      weight,
+      circumferences,
+      bone_diameters,
+      body_composition,
+      user_patient_id
+    }
+
+    const anthropometry = await AnthropometryService.update({ id }, data)
+
+    res.status(200).json({ anthropometry })
+  } catch (error) {
+    res.status(400).json({ error: "Falha ao atualizar antropometria." })
+  }
+})
+
 router.delete('/delete/:id', async (req, res) => {
   try {
     const { id } = req.params
