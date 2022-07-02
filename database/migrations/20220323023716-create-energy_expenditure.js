@@ -16,7 +16,7 @@ module.exports = {
         allowNull: false
       },
       tall: {
-        type: Sequelize.DECIMAL(3, 2),
+        type: Sequelize.DECIMAL(5, 2),
         allowNull: false
       },
       weight: {

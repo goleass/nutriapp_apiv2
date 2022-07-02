@@ -49,7 +49,7 @@ class Anthropometry {
       if (r === 0)
         throw Error("Falha ao deletar.")
 
-      const updatedData = this.AnthropometryService.findOne(params)
+      const updatedData = await this.AnthropometryService.findOne(params)
 
       return updatedData
     } catch (error) {

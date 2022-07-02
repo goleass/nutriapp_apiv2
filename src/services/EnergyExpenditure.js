@@ -51,7 +51,7 @@ class EnergyExpenditure {
       if (r === 0)
         throw Error("Falha ao deletar.")
 
-      const updatedData = this.EnergyExpenditureService.findOne(params)
+      const updatedData = await this.EnergyExpenditureService.findOne(params)
 
       return updatedData
     } catch (error) {

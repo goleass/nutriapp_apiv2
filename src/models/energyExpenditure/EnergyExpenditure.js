@@ -13,11 +13,11 @@ const EnergyExpenditure = (sequelize, DataTypes) => {
       allowNull: false
     },
     tall: {
-      type: DataTypes.DECIMAL(3,2),
+      type: DataTypes.DECIMAL(5,2),
       allowNull: false
     },
     weight: {
-      type: DataTypes.DECIMAL(3,2),
+      type: DataTypes.DECIMAL(5,2),
       allowNull: false
     },
     formula: {

@@ -2,7 +2,7 @@
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('Anthropometry', {
+    await queryInterface.createTable('FoodPlan', {
       id: {
         type: Sequelize.UUID,
         primaryKey: true
@@ -11,27 +11,16 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      anthropometry_date: {
-        type: Sequelize.DATE,
-        allowNull: false
-      },
-      tall: {
-        type: Sequelize.DECIMAL(5, 2),
-        allowNull: false
-      },
-      weight: {
-        type: Sequelize.DECIMAL(5, 2),
-        allowNull: false
-      },
-      circumferences: {
+      references: {
         type: Sequelize.JSONB,
         allowNull: true
       },
-      bone_diameters: {
-        type: Sequelize.JSONB,
-        allowNull: true
+      status: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
-      body_composition: {
+      days: {
         type: Sequelize.JSONB,
         allowNull: true
       },
@@ -47,6 +36,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Anthropometry');
+    await queryInterface.dropTable('FoodPlan');
   }
 };

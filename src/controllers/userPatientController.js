@@ -6,7 +6,8 @@ const {
   UserPatient, 
   Anamnesis, 
   EnergyExpenditure,
-  Anthropometry
+  Anthropometry,
+  FoodPlan
 } = require('../models/index')
 const userPatientService = require('../services/UserPatient')
 
@@ -60,7 +61,8 @@ router.get('/:id', async (req, res) => {
       [
         Anamnesis, 
         EnergyExpenditure,
-        Anthropometry
+        Anthropometry,
+        FoodPlan
       ]
     )
 

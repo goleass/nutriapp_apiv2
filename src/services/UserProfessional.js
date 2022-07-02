@@ -37,7 +37,7 @@ class UserProfessional {
         { where: params }
       )
 
-      const newUser = this.UserProfessionalService.findOne(params)
+      const newUser = await this.UserProfessionalService.findOne(params)
 
       return newUser
     } catch (error) {

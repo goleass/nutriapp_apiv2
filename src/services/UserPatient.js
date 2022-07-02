@@ -46,7 +46,7 @@ class UserPatient {
         { where: params }
       )
 
-      const newUser = this.UserPatientService.findOne(params)
+      const newUser = await this.UserPatientService.findOne(params)
 
       return newUser
     } catch (error) {

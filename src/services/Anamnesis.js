@@ -46,7 +46,7 @@ class Anamnesis {
         { where: params }
       )
 
-      const newAnamnesis = this.AnamnesisService.findOne(params)
+      const newAnamnesis = await this.AnamnesisService.findOne(params)
 
       return newAnamnesis
     } catch (error) {
