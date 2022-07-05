@@ -121,26 +121,42 @@ router.put('/update/:id', async (req, res) => {
     const { id } = req.params
     const {
       description,
-      references,
-      status,
-      days
+      meal_time,
+      items,
+      food_plan_id
     } = req.body
 
-    if (!id) {
+    if (!food_plan_id) {
       res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
       return
     }
 
-    const data = {
+    await FoodPlanMealService.update({id}, {
       description,
-      references,
-      status,
-      days
+      meal_time
+    })
+
+    const foodMeal = await FoodPlanMealService.findOne({id})
+
+    const foods = await foodMeal.getFood()
+
+    const ids = foods.map(i => i.id)
+    await foodMeal.removeFood(ids)
+
+    if(items && items.length > 0) {
+      await FoodPlanMealItemService.bulkCreate(
+        items.map(({id: foodId, qty}) => ({
+          id: uuid(),
+          food_id:foodId,
+          food_plan_meal_id: id,
+          qty
+        }))
+      )
     }
 
-    const foodPlan = await FoodPlanMealService.update({ id }, data)
+    const foodPlanMeal = await FoodPlanMealService.findOne({id})
 
-    res.status(200).json({ foodPlan })
+    res.status(200).json({ foodPlanMeal })
   } catch (error) {
     res.status(400).json({ error: "Falha ao atualizar plano alimentar." })
   }
