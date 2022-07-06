@@ -163,14 +163,17 @@ router.get('/:user_patient_id/food-plan', async (req, res) => {
     const { user_patient_id } = req.params
     let queryParams = req.query
 
-    queryParams = {...queryParams, status: true}
+    queryParams = {
+      ...queryParams, 
+      status: true
+    }
 
     if (!user_patient_id) {
       res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
       return
     }
 
-    const foodPlans = await FoodPlanService.findAll({ ...queryParams }, [
+    let foodPlans = await FoodPlanService.findAll({ ...queryParams }, [
       {
         model: FoodPlanMeal,
         include: {
@@ -179,6 +182,8 @@ router.get('/:user_patient_id/food-plan', async (req, res) => {
         }
       }
     ])
+
+    foodPlans = foodPlans.filter(foodPlan => foodPlan.user_patient_id)
 
     res.status(200).json({ foodPlans })
   } catch (error) {
