@@ -2,20 +2,25 @@ const express = require('express')
 const { v4: uuid } = require('uuid')
 
 const router = express.Router()
-const { 
-  UserPatient, 
-  Anamnesis, 
+const {
+  UserPatient,
+  Anamnesis,
   EnergyExpenditure,
   Anthropometry,
-  FoodPlan
+  FoodPlan,
+  FoodPlanMeal,
+  FoodPlanMealItem,
+  Food
 } = require('../models/index')
 const userPatientService = require('../services/UserPatient')
+const foodPlanService = require('../services/FoodPlan')
 
 const authMiddleware = require('../middlewares/auth')
 
 router.use(authMiddleware)
 
 const UserPatientService = new userPatientService(UserPatient)
+const FoodPlanService = new foodPlanService(FoodPlan)
 
 router.post('/new', async (req, res) => {
   try {
@@ -47,6 +52,19 @@ router.post('/new', async (req, res) => {
   }
 })
 
+router.get('/me', async (req, res) => {
+  try {
+    let patient = await UserPatientService.findOne({ id: req.user_id })
+
+    patient.password = undefined
+
+    res.status(200).json(patient)
+  } catch (error) {
+    res.status(400).json({ error: "Falha ao buscar informações pessoais." })
+    console.log(error)
+  }
+})
+
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params
@@ -57,9 +75,9 @@ router.get('/:id', async (req, res) => {
     }
 
     const patient = await UserPatientService.findOne(
-      { id }, 
+      { id },
       [
-        Anamnesis, 
+        Anamnesis,
         EnergyExpenditure,
         Anthropometry,
         FoodPlan
@@ -137,6 +155,35 @@ router.put('/update/:id', async (req, res) => {
     res.status(200).json({ patient })
   } catch (error) {
     res.status(400).json({ error: "Falha ao atualizar paciente." })
+  }
+})
+
+router.get('/:user_patient_id/food-plan', async (req, res) => {
+  try {
+    const { user_patient_id } = req.params
+    let queryParams = req.query
+
+    queryParams = {...queryParams, status: true}
+
+    if (!user_patient_id) {
+      res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
+      return
+    }
+
+    const foodPlans = await FoodPlanService.findAll({ ...queryParams }, [
+      {
+        model: FoodPlanMeal,
+        include: {
+          model: FoodPlanMealItem,
+          include: Food
+        }
+      }
+    ])
+
+    res.status(200).json({ foodPlans })
+  } catch (error) {
+    console.log(error)
+    res.status(400).json({ error: "Falha ao pesquisar plano alimentar." })
   }
 })
 

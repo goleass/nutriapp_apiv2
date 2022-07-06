@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken')
 const { v4: uuid } = require('uuid')
 
 const router = express.Router()
-const { UserProfessional } = require('../models/index')
-const userProfessionalService = require('../services/UserProfessional')
+const { UserPatient } = require('../models/index')
+const userPatientService = require('../services/UserPatient')
 
-const UserProfessionalService = new userProfessionalService(UserProfessional)
+const UserPatientService = new userPatientService(UserPatient)
 
 function generateToken(params = {}) {
   return jwt.sign(params, process.env.API_SECRET, {
@@ -17,32 +17,31 @@ function generateToken(params = {}) {
 
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, name } = req.body
+    const { email, password } = req.body
 
-    if (!email || !password || !name)
+    if (!email || !password)
       res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
 
-    if (await UserProfessionalService.findOne({ email: email }))
-      return res.status(400).json({ error: "Usuário já existe." })
+    const patient = await UserPatientService.findOne({ email: email })
+
+    if (!patient) return res.status(400).json({ error: "Paciente ainda não cadastrado pelo nutricionista." })
+
+    if(patient.password) 
+      return res.status(400).json({ error: "Paciente já cadastrado." })
 
     const hash = await bcrypt.hash(password, 10)
 
-    id = uuid();
-
     const data = {
-      id,
-      name,
-      email,
       password: hash
     }
 
-    const user = await UserProfessionalService.add(data)
+    const patientUpdated = await UserPatientService.update({id: patient.id},data)
 
-    user.password = undefined
+    patientUpdated.password = undefined
 
     return res.json({
-      user,
-      token: generateToken({ id: user.id })
+      user: patientUpdated,
+      token: generateToken({ id: patientUpdated.id })
     })
   }
   catch (error) {
@@ -58,7 +57,7 @@ router.post('/authenticate', async (req, res) => {
     if (!email || !password)
       res.status(400).json({ error: "Os campos não foram preenchidos corretamente." })
 
-    const user = await UserProfessionalService.findOne({ email: email })
+    const user = await UserPatientService.findOne({ email: email })
 
     if (!user)
       return res.status(401).json({ error: "Usuário e/ou senha inválidos." })

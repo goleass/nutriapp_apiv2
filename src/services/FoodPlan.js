@@ -21,9 +21,9 @@ class FoodPlan {
     }
   }
 
-  async findAll(params) {
+  async findAll(params, include = null) {
     try {
-      const FoodPlan = await this.FoodPlanService.findAll({ where: params })
+      const FoodPlan = await this.FoodPlanService.findAll({ where: params, include })
       return FoodPlan
     } catch (error) {
       throw error
