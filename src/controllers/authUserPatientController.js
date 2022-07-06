@@ -60,7 +60,10 @@ router.post('/authenticate', async (req, res) => {
     const user = await UserPatientService.findOne({ email: email })
 
     if (!user)
-      return res.status(401).json({ error: "Usuário e/ou senha inválidos." })
+      return res.status(401).json({ error: "Usuário não existe." })
+
+    if(!user.password) 
+      return res.status(401).json({ error: "Usuário não existe." })
 
     if (!await bcrypt.compare(password, user.password)) {
       return res.status(401).json({ error: "Usuário ou senha inválidos." })
