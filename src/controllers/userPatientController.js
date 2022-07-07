@@ -165,6 +165,7 @@ router.get('/:user_patient_id/food-plan', async (req, res) => {
 
     queryParams = {
       ...queryParams, 
+      user_patient_id,
       status: true
     }
 
